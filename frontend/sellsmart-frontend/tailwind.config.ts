@@ -8,8 +8,11 @@ export default {
   ],
   theme: {
     extend: {
+      transitionProperty: {
+        transform: 'transform',
+      },
       animation: {
-        fadeIn: "fadeIn 2s ease-in forwards",
+        fadeInText: "fadeIn 2s ease-in forwards"
       },
       keyframes: {
         fadeIn: {
