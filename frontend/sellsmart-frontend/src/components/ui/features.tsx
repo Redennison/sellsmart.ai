@@ -1,12 +1,16 @@
-"use client"
+"use client";
 
 import AOS from "aos";
 import "aos/dist/aos.css"; // Import AOS styles
-import { useEffect } from "react";
+import { useEffect, forwardRef } from "react";
 import { LineChart, Clock, DollarSign } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
-export default function Features() {
+interface FeaturesProps {
+  // Add any props here if needed in the future
+}
+
+const Features = forwardRef<HTMLDivElement, FeaturesProps>((props, ref) => {
   const cards = [
     {
       icon: <LineChart className="h-10 w-10 text-purple-500" />,
@@ -33,8 +37,8 @@ export default function Features() {
     });
   }, []);
 
-return (
-    <section className="py-24 bg-slate-900 flex items-center justify-center">
+  return (
+    <section ref={ref} className="py-24 bg-slate-900 flex items-center justify-center">
       <div className="container px-4 md:px-6">
         <div className="grid gap-12 lg:grid-cols-3">
           {cards.map((card, index) => (
@@ -47,7 +51,9 @@ return (
                 <CardHeader>
                   {card.icon}
                   <CardTitle className="text-white mt-4">{card.title}</CardTitle>
-                  <CardDescription className="text-gray-400">{card.description}</CardDescription>
+                  <CardDescription className="text-gray-400">
+                    {card.description}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </div>
@@ -56,4 +62,6 @@ return (
       </div>
     </section>
   );
-}
+});
+
+export default Features;
