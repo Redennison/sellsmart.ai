@@ -7,8 +7,9 @@ import HowItWorks from "../components/ui/howItWorks"
 import CallToAction from "../components/ui/callToAction"
 import Landing from "../components/ui/hero"
 import { useRef } from "react"
+import Image from "next/image"
 export default function LandingPage() {
-  
+
   // Reference for the target div
   const learnMoreRef = useRef<HTMLDivElement | null>(null);
   const getStartedRef = useRef<HTMLDivElement | null>(null);
@@ -43,7 +44,12 @@ export default function LandingPage() {
         <div className="container px-4 md:px-6 py-12">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-2 text-xl font-bold text-white">
-              <Car className="h-6 w-6" />
+              <Image
+                src="/sell_smart_logo_no_text.png" // Path relative to the public folder
+                alt="Company Logo"
+                width={20} // Adjust dimensions as needed
+                height={20}
+              />
               SellSmartAI
             </div>
             <div className="mt-6 md:mt-0">

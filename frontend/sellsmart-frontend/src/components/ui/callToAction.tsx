@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { forwardRef } from "react";
+import Link from "next/link";
 
 interface FeaturesProps {
   // Add any props here if needed in the future
@@ -20,7 +21,7 @@ const CallToAction = forwardRef<HTMLDivElement, FeaturesProps>((props, ref) => {
               </p>
               <div className="mt-10">
                 <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-300">
-                  Start Your Free Analysis
+                  <Link href="/api/auth/login">Start Your Free Analysis</Link>
                 </Button>
               </div>
             </div>
