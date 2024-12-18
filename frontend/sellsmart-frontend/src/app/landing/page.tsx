@@ -1,14 +1,29 @@
 "use client"
 
 import Link from "next/link"
-import { Car } from 'lucide-react'
-import Features from "../components/ui/features"
-import HowItWorks from "../components/ui/howItWorks"
-import CallToAction from "../components/ui/callToAction"
-import Landing from "../components/ui/hero"
-import { useRef } from "react"
+import Features from "@/components/ui/features"
+import HowItWorks from "@/components/ui/howItWorks"
+import CallToAction from "@/components/ui/callToAction"
+import Landing from "@/components/ui/hero"
+import { useRef, useEffect } from "react"
 import Image from "next/image"
+import { useRouter } from 'next/navigation';
+import { useUser } from '@auth0/nextjs-auth0/client';
+
 export default function LandingPage() {
+
+  const { user, error, isLoading } = useUser();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    // If user is logged in, redirect to analyze page
+    if (user) {
+      router.push('/analyze')
+    } 
+  })
+
+  console.log(user);
 
   // Reference for the target div
   const learnMoreRef = useRef<HTMLDivElement | null>(null);
