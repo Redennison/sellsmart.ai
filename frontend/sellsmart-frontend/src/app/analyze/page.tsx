@@ -1,15 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function AnalyzePage() {
-  const { user, error, isLoading } = useUser();
-  useEffect(() =>
-  {
-    console.log(user);
-  })
-  console.log(user);
 
   const [formData, setFormData] = useState({
     make: '',

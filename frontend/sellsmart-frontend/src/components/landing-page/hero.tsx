@@ -20,7 +20,7 @@ const Landing = ({
 
     return (
         <section className="h-[100vh] relative overflow-hidden px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-slate-900" />
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black" />
             <div className="relative mx-auto max-w-7xl text-center">
                 <h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 animate-fadeInText opacity-1">
                     Sell Your Car at the Perfect Time

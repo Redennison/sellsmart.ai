@@ -17,14 +17,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <UserProvider>
-        <body className={inter.className}>
-          <div id="app-container">
-            <Navbar />
-            <main>{children}</main>
-          </div>
-        </body>
-      </UserProvider>
+      <body className={inter.className}>
+        <div id="app-container">
+          <Navbar />
+          <main>{children}</main>
+        </div>
+      </body>
     </html>
   );
 }

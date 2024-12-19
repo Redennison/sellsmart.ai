@@ -20,9 +20,11 @@ const CallToAction = forwardRef<HTMLDivElement, FeaturesProps>((props, ref) => {
                 Join thousands of smart sellers who use SellSmartAI to time their car sales perfectly.
               </p>
               <div className="mt-10">
-                <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-300">
-                  <Link href="/api/auth/login">Start Your Free Analysis</Link>
-                </Button>
+                <Link href="/sign-up">
+                  <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-300">
+                    Start Your Free Analysis
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

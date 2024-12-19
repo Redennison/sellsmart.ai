@@ -8,19 +8,20 @@ import Landing from "@/components/landing-page/hero"
 import { useRef, useEffect } from "react"
 import Image from "next/image"
 import { useRouter } from 'next/navigation';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '@/app/firebase/config'
 
 export default function LandingPage() {
 
-  const { user, error, isLoading } = useUser();
+  const [user] = useAuthState(auth)
+  const router = useRouter()
+  const userSession = sessionStorage.getItem('user')
 
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoading && user) {
-      router.push('/analyze')
-    }
-  }, [isLoading])
+  // useEffect(() => {
+  //   if (!userSession) {
+  //     return router.push('/sign-up')
+  //   }
+  // })
 
   // Reference for the target div
   const learnMoreRef = useRef<HTMLDivElement | null>(null);

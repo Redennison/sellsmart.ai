@@ -3,19 +3,19 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '@/app/firebase/config'
+import { signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation'
 
 const Navbar = () => {
-  const { user, error, isLoading } = useUser();
+    const [user] = useAuthState(auth)
 
-  if (isLoading) {
-    // Render a placeholder while the user state is loading
-    return <div className="h-16 bg-black" />;
-  }
+    const router = useRouter();
 
   return (
     <nav className="top-0 fixed w-full z-50 bg-black/80 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <span className="text-white text-lg font-semibold flex items-center gap-2">
@@ -43,19 +43,23 @@ const Navbar = () => {
                 >
                   History
                 </Link>
-                <Link
-                  href="/api/auth/logout"
+                <button
+                  onClick={() => {
+                    signOut(auth)
+                    sessionStorage.removeItem('user')
+                    return router.push('/')
+                  }}
                   className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                 >
                   Logout
-                </Link>
+                </button>
               </>
             ) : (
               <Link
-                href="/api/auth/login"
+                href="/sign-in"
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
               >
-                Login
+                Sign In
               </Link>
             )}
           </div>
