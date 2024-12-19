@@ -9,7 +9,7 @@ export default function HistoryPage() {
   ]
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black p-4">
       <Card className="w-full max-w-4xl bg-black/80 text-white border-gray-700 shadow-lg backdrop-blur-sm">
         <CardHeader className="pb-4">
           <CardTitle className="text-3xl font-bold text-center text-white">Analysis History</CardTitle>

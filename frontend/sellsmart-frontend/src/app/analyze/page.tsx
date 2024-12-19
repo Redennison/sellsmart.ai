@@ -1,8 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function AnalyzePage() {
+  const { user, error, isLoading } = useUser();
+  useEffect(() =>
+  {
+    console.log(user);
+  })
+  console.log(user);
+
   const [formData, setFormData] = useState({
     make: '',
     model: '',
@@ -22,7 +30,7 @@ export default function AnalyzePage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gradient-to-br from-gray-900 to-black p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black p-4">
       <div className="w-full max-w-md bg-black/80 text-white border border-gray-700 rounded-lg shadow-lg backdrop-blur-sm p-8">
         <h1 className="text-3xl font-bold text-center text-white mb-6">Analyze Your Car</h1>
         <form onSubmit={handleSubmit} className="space-y-6">

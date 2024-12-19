@@ -1,10 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import Features from "@/components/ui/features"
-import HowItWorks from "@/components/ui/howItWorks"
-import CallToAction from "@/components/ui/callToAction"
-import Landing from "@/components/ui/hero"
+import Features from "@/components/landing-page/features"
+import HowItWorks from "@/components/landing-page/howItWorks"
+import CallToAction from "@/components/landing-page/callToAction"
+import Landing from "@/components/landing-page/hero"
 import { useRef, useEffect } from "react"
 import Image from "next/image"
 import { useRouter } from 'next/navigation';
@@ -17,13 +17,10 @@ export default function LandingPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // If user is logged in, redirect to analyze page
-    if (user) {
+    if (!isLoading && user) {
       router.push('/analyze')
-    } 
-  })
-
-  console.log(user);
+    }
+  }, [isLoading])
 
   // Reference for the target div
   const learnMoreRef = useRef<HTMLDivElement | null>(null);
