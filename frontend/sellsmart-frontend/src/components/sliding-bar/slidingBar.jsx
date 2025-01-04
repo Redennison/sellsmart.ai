@@ -2,12 +2,13 @@
 
 import React, { useState } from 'react';
 
-const SlidingBar = ({ id, title, min = 5000, max = 200000, step = 5000, unit=null }) => {
+const SlidingBar = ({ id, title, min = 5000, max = 200000, step = 5000, unit = null, onValueChange }) => {
   const [value, setValue] = useState(min);
 
   const handleChange = (e) => {
     const newValue = Number(e.target.value);
     setValue(newValue);
+    onValueChange(newValue);
     updateSliderBackground(newValue);
   };
 

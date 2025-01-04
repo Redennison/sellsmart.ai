@@ -3,22 +3,31 @@
 import { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 
-const LineChart = () => {
+const LineChart = ({ maxKm, curKm, step }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
+
+  console.log('maxkm: ' + maxKm)
 
   useEffect(() => {
     if (chartRef.current && !chartInstance.current) {
       const ctx = chartRef.current.getContext('2d');
 
+      let xAxisValues = []
+      let yAxisValues = []
+      for (let i = curKm; i <= maxKm; i += step) {
+        xAxisValues.push(i)
+        yAxisValues.push(maxKm - i)
+      }
+
       chartInstance.current = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['0', '10000', '20000', '30000', '40000', '50000', '60000'], // Example x-axis values (in km)
+          labels: xAxisValues,
           datasets: [
             {
               label: 'Car Price',
-              data: [85000, 80000, 70000, 65000, 56000, 55000, 40000], // Example y-axis values (in price)
+              data: yAxisValues,
               borderColor: 'rgb(75, 192, 192)',
               tension: 0.1,
             },
@@ -79,7 +88,7 @@ const LineChart = () => {
         chartInstance.current = null;
       }
     };
-  }, []);
+  }, [maxKm, curKm, step]);
 
   return (
     <div className="w-full h-full">

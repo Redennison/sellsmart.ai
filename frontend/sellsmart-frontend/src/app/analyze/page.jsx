@@ -1,7 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getCarMakesAndModels } from '@/lib/utils';
+import { getCarMakesAndModels, getCurrentFormattedDate } from '@/lib/utils';
+import { useRouter } from 'next/navigation'
+import { collection, query, where, getDocs, setDoc, doc } from "firebase/firestore"
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth, db } from '@/app/firebase/config'
 
 export default function AnalyzePage() {
   const [make, setMake] = useState('');
@@ -9,6 +13,9 @@ export default function AnalyzePage() {
   const [year, setYear] = useState('');
   const [km, setKm] = useState('');
   const [makeToModel, setMakeToModel] = useState(new Map());
+  const [user] = useAuthState(auth)
+
+  const router = useRouter()
 
   useEffect(() => {
     const fetchCarData = async () => {
@@ -23,9 +30,45 @@ export default function AnalyzePage() {
     fetchCarData();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', { make, model, year, km });
+
+    // Write to history
+    const historyRef = collection(db, "history")
+
+    // Create a query against the collection.
+    const q = query(historyRef, where("email", "==", user?.email));
+    const querySnapshot = await getDocs(q);
+
+    let userCarHistory = [];
+    let docId = null;
+    let newCarObject = {
+      'km': km,
+      'car_make': make,
+      'car_model': model,
+      'year': year,
+      'date': getCurrentFormattedDate()
+    }
+
+    // Check if there's a matching document
+    if (!querySnapshot.empty) {
+      const document = querySnapshot.docs[0];
+      userCarHistory = document.data().cars || []; // Get existing cars or default to an empty array
+      docId = document.id; // Get the document ID
+    } else {
+      // If no document exists, create a new one
+      docId = doc(historyRef).id; // Generate a new document ID
+    }
+
+    // Update the document
+    await setDoc(doc(historyRef, docId), {
+      email: user?.email,
+      cars: [newCarObject, ...userCarHistory], // Add the new car at the front of the array
+    });
+
+    console.log("Car history updated successfully!");
+
+    router.push(`/analysis?make=${make}&model=${model}&year=${year}&km=${km}`)
   };
 
   return (
@@ -90,18 +133,22 @@ export default function AnalyzePage() {
             >
               Year
             </label>
-            <input
+            <select
               id="year"
               name="year"
-              type="number"
               value={year}
               onChange={(e) => setYear(e.target.value)}
-              placeholder="Enter year"
               required
-              min={1900}
-              max={new Date().getFullYear()}
               className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
-            />
+            >
+              <option value="" disabled>Select Year</option>
+              {Array.from({ length: new Date().getFullYear() - 1949 }, (_, i) => 1950 + i).map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
+
           </div>
 
           {/* Input for Kilometers */}
@@ -115,14 +162,18 @@ export default function AnalyzePage() {
             <input
               id="km"
               name="km"
-              type="number"
-              value={km}
-              onChange={(e) => setKm(e.target.value)}
+              type="text"
+              value={km ? Number(km.replace(/,/g, '')).toLocaleString() : ''}
+              onChange={(e) => {
+                const inputValue = e.target.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+                setKm(inputValue); // Update the state with the raw numeric value
+              }}
               placeholder="Enter kilometers"
               required
-              min={0}
               className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
             />
+
+
           </div>
 
           <button

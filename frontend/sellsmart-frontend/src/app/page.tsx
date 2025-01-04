@@ -15,13 +15,18 @@ export default function LandingPage() {
 
   const [user] = useAuthState(auth)
   const router = useRouter()
-  const userSession = sessionStorage.getItem('user')
 
-  // useEffect(() => {
-  //   if (!userSession) {
-  //     return router.push('/sign-up')
-  //   }
-  // })
+  useEffect(() => {
+    // Check if running in the browser
+    if (typeof window !== "undefined") {
+      const session = sessionStorage.getItem("user");
+
+      // Redirect if no session
+      if (!session) {
+        router.push("/sign-up");
+      }
+    }
+  }, [router]);
 
   // Reference for the target div
   const learnMoreRef = useRef<HTMLDivElement | null>(null);
