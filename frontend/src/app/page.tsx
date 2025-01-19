@@ -44,13 +44,13 @@ export default function LandingPage() {
       <Landing scrollToTarget={scrollToTarget} learnMoreRef={learnMoreRef} getStartedRef={getStartedRef} />
 
       {/* Features Section */}
-      <Features ref={learnMoreRef} />
+      <Features />
 
       {/* How It Works Section */}
       <HowItWorks />
 
       {/* CTA Section */}
-      <CallToAction ref={getStartedRef} />
+      <CallToAction />
 
       {/* Footer */}
       <footer className="border-t border-gray-800 bg-black flex items-center justify-center">
