@@ -2,14 +2,17 @@
 
 import React, { useState } from 'react';
 
-const SlidingBar = ({ id, title, min = 5000, max = 200000, step = 5000, unit = null, onValueChange }) => {
+const SlidingBar = ({ id, title, min = 5000, max = 200000, step = 5000, unit = null, onValueChange, valid}) => {
   const [value, setValue] = useState(min);
 
   const handleChange = (e) => {
-    const newValue = Number(e.target.value);
-    setValue(newValue);
-    onValueChange(newValue);
-    updateSliderBackground(newValue);
+    const newValue = Number(e.target.value)
+    if (!valid(newValue)) {
+      return
+    }
+    setValue(newValue)
+    onValueChange(newValue)
+    updateSliderBackground(newValue)
   };
 
   const updateSliderBackground = (value) => {
@@ -36,9 +39,11 @@ const SlidingBar = ({ id, title, min = 5000, max = 200000, step = 5000, unit = n
           background: `linear-gradient(to right, #c79bf0 0%, #374151 0%)`,
         }}
       />
-      <div className="flex justify-between w-full mt-2 text-gray-400 text-sm">
-        <span>{min.toLocaleString()}{unit ? " " + unit : ""}</span>
-        <span>{max.toLocaleString()}{unit ? " " + unit : ""}</span>
+      <div className="flex justify-center w-full mt-2 text-gray-400 text-sm">
+        <span>
+          {value.toLocaleString()}
+          {unit ? " " + unit : ""}
+        </span>
       </div>
       <style jsx>{`
         #slider-${id}::-webkit-slider-thumb {

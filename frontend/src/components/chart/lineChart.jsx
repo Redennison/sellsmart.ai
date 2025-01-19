@@ -7,7 +7,7 @@ const LineChart = ({ maxKm, curKm, step }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
-  console.log('maxkm: ' + maxKm)
+  console.log(typeof maxKm)
 
   useEffect(() => {
     if (chartRef.current && !chartInstance.current) {
@@ -17,7 +17,7 @@ const LineChart = ({ maxKm, curKm, step }) => {
       let yAxisValues = []
       for (let i = curKm; i <= maxKm; i += step) {
         xAxisValues.push(i)
-        yAxisValues.push(maxKm - i)
+        yAxisValues.push(maxKm - i + Math.floor(Math.random() * 2501))
       }
 
       chartInstance.current = new Chart(ctx, {
@@ -75,6 +75,7 @@ const LineChart = ({ maxKm, curKm, step }) => {
                   return `$${value}`;
                 },
               },
+              min: 0,
             },
           },
         },
