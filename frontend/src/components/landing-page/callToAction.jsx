@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { forwardRef } from "react";
 import Link from "next/link";
 
-const CallToAction = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+const CallToAction = forwardRef(
   (props, ref) => {
     return (
       <section

@@ -6,7 +6,7 @@ import { useEffect, forwardRef } from "react";
 import { LineChart, Clock, DollarSign } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
-const Features = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>((props, ref) => {
+const Features = forwardRef((props, ref) => {
   const cards = [
     {
       icon: <LineChart className="h-10 w-10 text-purple-500" />,

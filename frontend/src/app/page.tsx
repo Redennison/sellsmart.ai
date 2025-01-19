@@ -18,10 +18,10 @@ export default function LandingPage() {
 
   useEffect(() => {
     // Check if running in the browser
-    if (user) {
+    if (user && router) {
       router.push('/analyze')
     }
-  }, [user]);
+  }, [user, router]);
 
   // Reference for the target div
   const learnMoreRef = useRef<HTMLDivElement | null>(null);
