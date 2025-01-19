@@ -2,11 +2,11 @@
 
 import AOS from "aos";
 import "aos/dist/aos.css"; // Import AOS styles
-import { useEffect } from "react";
+import { useEffect, forwardRef } from "react";
 import { LineChart, Clock, DollarSign } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
-const Features = () => {
+const Features = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>((props, ref) => {
   const cards = [
     {
       icon: <LineChart className="h-10 w-10 text-purple-500" />,
@@ -34,7 +34,7 @@ const Features = () => {
   }, []);
 
   return (
-    <section className="py-24 bg-slate-900 flex items-center justify-center">
+    <section ref={ref} className="py-24 bg-slate-900 flex items-center justify-center">
       <div className="container px-4 md:px-6">
         <div className="grid gap-12 lg:grid-cols-3">
           {cards.map((card, index) => (
@@ -58,6 +58,6 @@ const Features = () => {
       </div>
     </section>
   );
-};
+});
 
 export default Features;
