@@ -1,14 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { forwardRef } from "react";
 import Link from "next/link";
 
-interface FeaturesProps {
-  // Add any props here if needed in the future
-}
-
-const CallToAction = forwardRef<HTMLDivElement, FeaturesProps>((props, ref) => {
+const CallToAction = () => {
   return (
-    <section ref={ref} className="py-24 bg-slate-900 flex items-center justify-center">
+    <section className="py-24 bg-slate-900 flex items-center justify-center">
       <div className="container px-4 md:px-6">
         <div className="relative overflow-hidden rounded-3xl bg-purple-600 transition-shadow hover:shadow-2xl hover:shadow-purple-800">
           <div className="px-4 py-16 sm:px-6 md:py-24 lg:px-8">

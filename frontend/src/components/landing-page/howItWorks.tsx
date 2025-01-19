@@ -1,5 +1,3 @@
-import { CheckCircle } from "lucide-react";
-
 export default function HowItWorks() {
     const cards = [
       {
