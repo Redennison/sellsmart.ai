@@ -26,7 +26,7 @@ export default function HowItWorks() {
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                     {cards.map((card, index) => (
                         <div key={index} className="relative pl-16">
-                            <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-full bg-[#6AA84F] text-white">
+                            <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-full bg-[#6AA84F] text-white text-[1.25rem]">
                                 {card.number}
                             </div>
                             <h3 className="text-xl font-bold text-white mb-2">{card.title}</h3>

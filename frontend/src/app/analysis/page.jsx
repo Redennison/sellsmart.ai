@@ -76,14 +76,14 @@ export default function AnalysisPage() {
             {/* Right 20% */}
             <div className="lg:col-span-2 text-white bg-[#080f18] py-20 lg:py-10 px-14 flex flex-col justify-evenly space-y-6">
               <div>
-                <h2 className="text-xl font-semibold text-purple-300 mb-2">Optimal Sell Recommendation</h2>
+                <h2 className="text-xl font-semibold text-green-400 mb-2">Optimal Sell Recommendation</h2>
                 <p className="text-gray-400 leading-6">
                   Assuming you want to drive your current vehicle for as long as possible, we recommend selling at
-                  <span className="text-purple-300 font-bold"> {queryParams.km} km</span>.
+                  <span className="text-green-400 font-bold"> {queryParams.km} km</span>.
                 </p>
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-purple-300 mb-2">Data Analysis</h2>
+                <h2 className="text-xl font-semibold text-green-400 mb-2">Data Analysis</h2>
                 <p className="text-gray-400 leading-6">To make this prediction, we analyzed:</p>
                 <ul className="list-disc list-inside text-gray-400 mt-2">
                   <li>238 exact matches</li>
@@ -91,10 +91,10 @@ export default function AnalysisPage() {
                 </ul>
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-purple-300 mb-2">Confidence Rating</h2>
+                <h2 className="text-xl font-semibold text-green-400 mb-2">Confidence Rating</h2>
                 <p className="text-gray-400 leading-6">
                   We achieved a confidence rating of:
-                  <span className="text-purple-300 font-bold"> 93%</span>.
+                  <span className="text-green-400 font-bold"> 93%</span>.
                 </p>
               </div>
             </div>

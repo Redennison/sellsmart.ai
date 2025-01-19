@@ -85,7 +85,7 @@ const SignUpPage = () => {
             type="submit"
             disabled={loading}
             className={`w-full ${
-              loading ? "bg-gray-600" : "bg-purple-600 hover:bg-purple-700"
+              loading ? "bg-gray-600" : "bg-[#6AA84F] hover:bg-green-700"
             } text-white font-bold py-2 px-4 rounded transition-colors duration-300 ease-in-out transform hover:scale-105`}
           >
             {loading ? "Signing Up..." : "Sign Up"}
@@ -95,7 +95,7 @@ const SignUpPage = () => {
           Already have an account?{" "}
           <a
             href="/sign-in"
-            className="text-purple-400 hover:text-purple-300 underline"
+            className="text-[#6AA84F] hover:text-green-700 underline"
           >
             Sign In
           </a>

@@ -47,7 +47,7 @@ export default function HistoryPage() {
       {userCarHistory ?
         <Card className="w-full max-w-4xl bg-black/80 text-white border-gray-700 shadow-lg backdrop-blur-sm">
           <CardHeader className="pb-4">
-            <CardTitle className="text-3xl font-bold text-center text-white">Analysis History</CardTitle>
+            <CardTitle className="text-3xl font-bold py-3 text-center text-[#66BB6A]">Analysis History</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">

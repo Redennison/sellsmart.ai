@@ -89,10 +89,10 @@ export default function AnalyzePage() {
               value={make}
               onChange={(e) => setMake(e.target.value)}
               required
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-700 transition-colors"
             >
               <option value="" disabled>Select Make</option>
-              {Array.from(makeToModel.keys()).map((makeOption, index) => (
+              {Array.from(makeToModel.keys()).sort().map((makeOption, index) => (
                 <option key={`make-${index}`} value={makeOption}>
                   {makeOption}
                 </option>
@@ -114,10 +114,10 @@ export default function AnalyzePage() {
               onChange={(e) => setModel(e.target.value)}
               required
               disabled={!make}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-700 transition-colors"
             >
               <option value="" disabled>Select Model</option>
-              {(makeToModel.get(make) || []).map((modelOption, index) => (
+              {(makeToModel.get(make) || []).sort().map((modelOption, index) => (
                 <option key={`model-${index}`} value={modelOption}>
                   {modelOption}
                 </option>
@@ -139,7 +139,7 @@ export default function AnalyzePage() {
               value={year}
               onChange={(e) => setYear(e.target.value)}
               required
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-700 transition-colors"
             >
               <option value="" disabled>Select Year</option>
               {Array.from({ length: new Date().getFullYear() - 1949 }, (_, i) => 1950 + i).map((y) => (
@@ -170,7 +170,7 @@ export default function AnalyzePage() {
               }}
               placeholder="Enter kilometers"
               required
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-700 transition-colors"
             />
 
 
@@ -178,7 +178,7 @@ export default function AnalyzePage() {
 
           <button
             type="submit"
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300 ease-in-out transform hover:scale-105"
+            className="w-full bg-[#6AA84F] hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300 ease-in-out transform hover:scale-105"
           >
             Analyze
           </button>

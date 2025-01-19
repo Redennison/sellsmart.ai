@@ -1,6 +1,10 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+function capitalizeFirstLetter(val) {
+  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
+
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
@@ -30,8 +34,8 @@ export async function getCarMakesAndModels() {
   const makeToModel = new Map();
 
   rows.forEach(row => {
-    const make = row[3];
-    const model = row[4];
+    const make = capitalizeFirstLetter(row[3]);
+    const model = capitalizeFirstLetter(row[4]);
 
     if (!makeToModel.has(make)) {
       makeToModel.set(make, []);

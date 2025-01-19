@@ -43,7 +43,7 @@ const Features = forwardRef((props, ref) => {
               data-aos="fade-up"
               className="bg-slate-800 border-slate-700 transform transition-opacity"
             >
-              <Card>
+              <Card className="h-[200px] flex items-center">
                 <CardHeader>
                   {card.icon}
                   <CardTitle className="text-white pt-4">{card.title}</CardTitle>

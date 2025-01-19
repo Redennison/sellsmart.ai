@@ -18,7 +18,7 @@ const SlidingBar = ({ id, title, min = 5000, max = 200000, step = 5000, unit = n
   const updateSliderBackground = (value) => {
     const percentage = ((value - min) / (max - min)) * 100;
     const slider = document.getElementById('slider-' + id);
-    slider.style.background = `linear-gradient(to right, #c79bf0 ${percentage}%, #374151 ${percentage}%)`;
+    slider.style.background = `linear-gradient(to right, #66BB6A ${percentage}%, #374151 ${percentage}%)`;
   };
 
   return (
@@ -36,7 +36,7 @@ const SlidingBar = ({ id, title, min = 5000, max = 200000, step = 5000, unit = n
         onChange={handleChange}
         className="w-full h-2 rounded-lg appearance-none cursor-pointer focus:outline-none slider"
         style={{
-          background: `linear-gradient(to right, #c79bf0 0%, #374151 0%)`,
+          background: `linear-gradient(to right, #66BB6A 0%, #374151 0%)`,
         }}
       />
       <div className="flex justify-center w-full mt-2 text-gray-400 text-sm">
@@ -50,7 +50,7 @@ const SlidingBar = ({ id, title, min = 5000, max = 200000, step = 5000, unit = n
           appearance: none;
           width: 16px;
           height: 16px;
-          background: #d8b4fe; /* Very dark purple */
+          background: #6AA84F; /* Very dark purple */
           border-radius: 50%;
           cursor: pointer;
         }
@@ -58,19 +58,17 @@ const SlidingBar = ({ id, title, min = 5000, max = 200000, step = 5000, unit = n
         #slider-${id}::-moz-range-thumb {
           width: 16px;
           height: 16px;
-          background: #d8b4fe; /* Very dark purple */
+          background: #6AA84F; /* Very dark purple */
           border-radius: 50%;
           cursor: pointer;
-          border: 2px solid #581c87;
         }
 
         #slider-${id}::-ms-thumb {
           width: 16px;
           height: 16px;
-          background: #d8b4fe; /* Very dark purple */
+          background: #6AA84F; /* Very dark purple */
           border-radius: 50%;
           cursor: pointer;
-          border: 2px solid #581c87;
         }
       `}</style>
     </div>
