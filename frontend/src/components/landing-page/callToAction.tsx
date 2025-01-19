@@ -27,6 +27,6 @@ const CallToAction = () => {
       </div>
     </section>
   );
-})
+}
 
 export default CallToAction;
