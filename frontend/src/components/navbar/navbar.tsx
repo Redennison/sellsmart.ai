@@ -18,15 +18,17 @@ const Navbar = () => {
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <span className="text-white text-lg font-semibold flex items-center gap-2">
-              <Image
-                src="/sell_smart_logo_no_text.png" // Path relative to the public folder
-                alt="Company Logo"
-                width={20} // Adjust dimensions as needed
-                height={20}
-              />
-              SellSmartAI
-            </span>
+            <Link href="/">
+              <span className="text-white text-lg font-semibold flex items-center gap-2">
+                <Image
+                  src="/sell_smart_logo_no_text.png" // Path relative to the public folder
+                  alt="Company Logo"
+                  width={20} // Adjust dimensions as needed
+                  height={20}
+                />
+                SellSmartAI
+              </span>
+            </Link>
           </div>
           <div className="flex">
             {user ? (

@@ -19,7 +19,7 @@ export default function LandingPage() {
   useEffect(() => {
     // Check if running in the browser
     if (user && router) {
-      router.push('/analyze')
+      // router.push('/analyze')
     }
   }, [user, router]);
 
