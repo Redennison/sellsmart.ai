@@ -20,13 +20,13 @@ export default function HowItWorks() {
     return (
         <section className="py-24 bg-black flex items-center justify-center">
             <div className="container px-4 md:px-6">
-                <h2 className="text-3xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+                <h2 className="text-3xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-[#6AA84F]">
                     How SellSmartAI Works
                 </h2>
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                     {cards.map((card, index) => (
                         <div key={index} className="relative pl-16">
-                            <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-full bg-purple-600 text-white">
+                            <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-full bg-[#6AA84F] text-white">
                                 {card.number}
                             </div>
                             <h3 className="text-xl font-bold text-white mb-2">{card.title}</h3>

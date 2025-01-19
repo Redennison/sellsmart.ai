@@ -19,9 +19,9 @@ const Landing = ({
 
     return (
         <section className="h-[100vh] relative overflow-hidden px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black" />
+            <div className="absolute inset-0 bg-gradient-to-tl  from-gray-900 to-black" />
             <div className="relative mx-auto max-w-7xl text-center">
-                <h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 animate-fadeInText opacity-1">
+                <h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-[#6AA84F] animate-fadeInText opacity-1">
                     Sell Your Car at the Perfect Time
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-gray-300 max-w-3xl mx-auto">
@@ -31,7 +31,7 @@ const Landing = ({
                     <Button
                         onClick={() => scrollToTarget(getStartedRef)}
                         size="lg"
-                        className="bg-purple-600 hover:bg-purple-700 group relative overflow-hidden"
+                        className="bg-[#6AA84F] hover:bg-green-700 group relative overflow-hidden text-black"
                     >
                         Get Started
                     <ArrowRight
