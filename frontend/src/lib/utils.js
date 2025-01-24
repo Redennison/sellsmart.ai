@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 export function capitalizeFirstLetter(val) {
   return String(val)
     .split(/([-\s]+)/) // Split by spaces or dashes, but keep the delimiters (spaces and dashes)
-    .map((part, index) => {
+    .map((part) => {
       if (part.match(/[-\s]+/)) {
         return part; // If it's a space or dash, just return it
       }
