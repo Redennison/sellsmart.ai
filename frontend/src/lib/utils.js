@@ -1,8 +1,16 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-function capitalizeFirstLetter(val) {
-  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+export function capitalizeFirstLetter(val) {
+  return String(val)
+    .split(/([-\s]+)/) // Split by spaces or dashes, but keep the delimiters (spaces and dashes)
+    .map((part, index) => {
+      if (part.match(/[-\s]+/)) {
+        return part; // If it's a space or dash, just return it
+      }
+      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase(); // Capitalize first letter of each word
+    })
+    .join(''); // Join everything back together without adding extra spaces
 }
 
 export function cn(...inputs) {

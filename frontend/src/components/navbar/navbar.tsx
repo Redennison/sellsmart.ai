@@ -35,13 +35,13 @@ const Navbar = () => {
               <>
                 <Link
                   href="/analyze"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white ml-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                 >
                   Analyze
                 </Link>
                 <Link
                   href="/history"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white ml-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                 >
                   History
                 </Link>
@@ -51,18 +51,26 @@ const Navbar = () => {
                     sessionStorage.removeItem('user')
                     return router.push('/')
                   }}
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white ml-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
                 >
                   Logout
                 </button>
               </>
             ) : (
-              <Link
-                href="/sign-in"
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
-              >
-                Sign In
-              </Link>
+              <>
+                <Link
+                  href="/sign-in"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white ml-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="text-black bg-[#6AA84F] hover:bg-green-700 ml-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                >
+                  Sign Up
+                </Link>
+              </>
             )}
           </div>
         </div>

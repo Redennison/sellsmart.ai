@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getCarMakesAndModels, getCurrentFormattedDate } from '@/lib/utils';
+import { getCarMakesAndModels, getCurrentFormattedDate, capitalizeFirstLetter } from '@/lib/utils';
 import { useRouter } from 'next/navigation'
 import { collection, query, where, getDocs, setDoc, doc } from "firebase/firestore"
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -14,6 +14,7 @@ export default function AnalyzePage() {
   const [km, setKm] = useState('');
   const [makeToModel, setMakeToModel] = useState(new Map());
   const [user] = useAuthState(auth)
+  const [loading, setLoading] = useState(false)
 
   const router = useRouter()
 
@@ -32,6 +33,7 @@ export default function AnalyzePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
 
     // Write to history
     const historyRef = collection(db, "history")
@@ -66,7 +68,7 @@ export default function AnalyzePage() {
       cars: [newCarObject, ...userCarHistory], // Add the new car at the front of the array
     });
 
-    console.log("Car history updated successfully!");
+    setLoading(false)
 
     router.push(`/analysis?make=${make}&model=${model}&year=${year}&km=${km}`)
   };
@@ -94,7 +96,7 @@ export default function AnalyzePage() {
               <option value="" disabled>Select Make</option>
               {Array.from(makeToModel.keys()).sort().map((makeOption, index) => (
                 <option key={`make-${index}`} value={makeOption}>
-                  {makeOption}
+                  {capitalizeFirstLetter(makeOption)}
                 </option>
               ))}
             </select>
@@ -119,7 +121,7 @@ export default function AnalyzePage() {
               <option value="" disabled>Select Model</option>
               {(makeToModel.get(make) || []).sort().map((modelOption, index) => (
                 <option key={`model-${index}`} value={modelOption}>
-                  {modelOption}
+                  {capitalizeFirstLetter(modelOption)}
                 </option>
               ))}
             </select>
@@ -142,7 +144,7 @@ export default function AnalyzePage() {
               className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-700 transition-colors"
             >
               <option value="" disabled>Select Year</option>
-              {Array.from({ length: new Date().getFullYear() - 1949 }, (_, i) => 1950 + i).map((y) => (
+              {Array.from({ length: new Date().getFullYear() - 1979 }, (_, i) => 1980 + i).reverse().map((y) => (
                 <option key={y} value={y}>
                   {y}
                 </option>
@@ -172,15 +174,14 @@ export default function AnalyzePage() {
               required
               className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-700 transition-colors"
             />
-
-
           </div>
 
           <button
+            disabled={loading}
             type="submit"
             className="w-full bg-[#6AA84F] hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300 ease-in-out transform hover:scale-105"
           >
-            Analyze
+            { loading ? "Analyzing..." : "Analyze" }
           </button>
         </form>
       </div>

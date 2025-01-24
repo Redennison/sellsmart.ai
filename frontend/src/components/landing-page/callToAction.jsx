@@ -18,7 +18,7 @@ const CallToAction = forwardRef(
                   Ready to Get the Best Value for Your Car?
                 </h2>
                 <p className="mt-6 text-lg leading-8">
-                  Join thousands of smart sellers who use SellSmartAI to time their car sales
+                  Join the community of smart sellers who use SellSmartAI to time their car sales
                   perfectly.
                 </p>
                 <div className="mt-10">

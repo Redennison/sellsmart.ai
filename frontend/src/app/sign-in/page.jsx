@@ -26,10 +26,10 @@ const SignInPage = () => {
         formData.email,
         formData.password
       );
-      console.log(res)
+
       sessionStorage.setItem('user', JSON.stringify(res?.user || null));
       setFormData({ email: "", password: "" });
-      return router.push("/"); // Redirect to home page after successful sign-in
+      return router.push("/analyze"); // Redirect to home page after successful sign-in
     } catch (error) {
       console.error("Sign-in error:", error);
     } finally {
@@ -57,7 +57,7 @@ const SignInPage = () => {
               onChange={handleInputChange}
               placeholder="Enter your email"
               required
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6AA84F] focus:border-[#6AA84F] transition-colors"
             />
           </div>
           <div className="space-y-2">
@@ -76,7 +76,7 @@ const SignInPage = () => {
               onChange={handleInputChange}
               placeholder="Enter your password"
               required
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#6AA84F] focus:border-[#6AA84F] transition-colors"
             />
           </div>
           <button
