@@ -42,6 +42,9 @@ export default function AnalyzePage() {
     const q = query(historyRef, where("email", "==", user?.email));
     const querySnapshot = await getDocs(q);
 
+    console.log(make)
+    console.log(model)
+
     let userCarHistory = [];
     let docId = null;
     let newCarObject = {
@@ -75,8 +78,8 @@ export default function AnalyzePage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black p-4">
-      <div className="w-full max-w-md bg-black/80 text-white border border-gray-700 rounded-lg shadow-lg backdrop-blur-sm p-8">
-        <h1 className="text-3xl font-bold text-center text-white mb-6">Analyze Your Car</h1>
+      <div className="w-full max-w-2xl bg-black/80 text-white border border-gray-700 rounded-lg shadow-lg backdrop-blur-sm p-8 my-16">
+        <h1 className="text-3xl font-bold text-center text-[#6AA84F] mb-6">Analyze Your Car</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Dropdown for Make */}
           <div className="space-y-2">
@@ -176,7 +179,7 @@ export default function AnalyzePage() {
             />
           </div>
 
-          <button
+        <button
             disabled={loading}
             type="submit"
             className="w-full bg-[#6AA84F] hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300 ease-in-out transform hover:scale-105"

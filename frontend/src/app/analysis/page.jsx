@@ -2,9 +2,11 @@
 
 import LineChart from '@/components/chart/lineChart';
 import SlidingBar from '@/components/sliding-bar/slidingBar';
+import DoubleSlider from '../../components/sliding-bar/doubleSlidingBar';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import LoadingSpinner from "../../components/loading-spinner/loadingSpinner"
+import { formatNumber } from '../../lib/utils';
 
 export default function AnalysisPage() {
   const router = useRouter();
@@ -51,15 +53,11 @@ export default function AnalysisPage() {
               </div>
               {/* Bottom half */}
               <div className="flex flex-col items-center justify-evenly bg-gray-900 text-white p-4">
-                <SlidingBar 
-                  id="1" 
-                  title="Future Kilometers for SellSmartAI to Analyze" 
-                  unit="km" 
-                  onValueChange={setSlider1Value}
-                  valid={(updatedValue) => {
-                    return updatedValue >= slider2Value
-                  }}
-                />
+              <DoubleSlider
+                onChange={() => 
+                  console.log("changed value")
+                }
+              />
                 <SlidingBar 
                   id="2" 
                   title="Kilometer Increment for Analyzing Value Changes" 
@@ -76,14 +74,14 @@ export default function AnalysisPage() {
             {/* Right 20% */}
             <div className="lg:col-span-2 text-white bg-[#080f18] py-20 lg:py-10 px-14 flex flex-col justify-evenly space-y-6">
               <div>
-                <h2 className="text-xl font-semibold text-green-400 mb-2">Optimal Sell Recommendation</h2>
+                <h2 className="text-xl font-semibold text-[#6AA84F] mb-2">Optimal Sell Recommendation</h2>
                 <p className="text-gray-400 leading-6">
                   Assuming you want to drive your current vehicle for as long as possible, we recommend selling at
-                  <span className="text-green-400 font-bold"> {queryParams.km} km</span>.
+                  <span className="text-[#6AA84F] font-bold"> {formatNumber(queryParams.km)} km</span>.
                 </p>
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-green-400 mb-2">Data Analysis</h2>
+                <h2 className="text-xl font-semibold text-[#6AA84F] mb-2">Data Analysis</h2>
                 <p className="text-gray-400 leading-6">To make this prediction, we analyzed:</p>
                 <ul className="list-disc list-inside text-gray-400 mt-2">
                   <li>238 exact matches</li>
@@ -91,10 +89,10 @@ export default function AnalysisPage() {
                 </ul>
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-green-400 mb-2">Confidence Rating</h2>
+                <h2 className="text-xl font-semibold text-[#6AA84F] mb-2">Confidence Rating</h2>
                 <p className="text-gray-400 leading-6">
                   We achieved a confidence rating of:
-                  <span className="text-green-400 font-bold"> 93%</span>.
+                  <span className="text-[#6AA84F] font-bold"> 93%</span>.
                 </p>
               </div>
             </div>

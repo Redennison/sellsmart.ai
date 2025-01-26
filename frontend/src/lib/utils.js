@@ -1,6 +1,10 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+export function formatNumber(val) {
+  return Number(String(val).replace(/,/g, '')).toLocaleString()
+}
+
 export function capitalizeFirstLetter(val) {
   return String(val)
     .split(/([-\s]+)/) // Split by spaces or dashes, but keep the delimiters (spaces and dashes)
@@ -42,8 +46,8 @@ export async function getCarMakesAndModels() {
   const makeToModel = new Map();
 
   rows.forEach(row => {
-    const make = capitalizeFirstLetter(row[3]);
-    const model = capitalizeFirstLetter(row[4]);
+    const make = row[3];
+    const model = row[4];
 
     if (!makeToModel.has(make)) {
       makeToModel.set(make, []);

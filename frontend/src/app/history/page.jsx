@@ -5,6 +5,7 @@ import { collection, query, where, getDocs, setDoc, doc } from "firebase/firesto
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, db } from '@/app/firebase/config'
 import { useState, useEffect } from 'react'
+import { capitalizeFirstLetter } from '../../lib/utils'
 import LoadingSpinner from "../../components/loading-spinner/loadingSpinner"
 
 export default function HistoryPage() {
@@ -45,9 +46,9 @@ export default function HistoryPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black p-4">
       {userCarHistory ?
-        <Card className="w-full max-w-4xl bg-black/80 text-white border-gray-700 shadow-lg backdrop-blur-sm">
+        <Card className="w-full max-w-4xl bg-black/80 text-white border-gray-700 shadow-lg backdrop-blur-sm space-y-6 my-16">
           <CardHeader className="pb-4">
-            <CardTitle className="text-3xl font-bold py-3 text-center text-[#66BB6A]">Analysis History</CardTitle>
+            <CardTitle className="text-3xl font-bold py-3 text-center text-[#6AA84F]">Analysis History</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
@@ -65,8 +66,8 @@ export default function HistoryPage() {
                   {userCarHistory && userCarHistory.map((item, index) => (
                     <tr key={index} className="border-b border-gray-700 hover:bg-gray-800">
                       <td className="px-6 py-4">{item.date}</td>
-                      <td className="px-6 py-4">{item.car_make}</td>
-                      <td className="px-6 py-4">{item.car_model}</td>
+                      <td className="px-6 py-4">{capitalizeFirstLetter(item.car_make)}</td>
+                      <td className="px-6 py-4">{capitalizeFirstLetter(item.car_model)}</td>
                       <td className="px-6 py-4">{item.year}</td>
                       <td className="px-6 py-4">{Number(item.km.replace(/,/g, '')).toLocaleString()}</td>
                     </tr>
