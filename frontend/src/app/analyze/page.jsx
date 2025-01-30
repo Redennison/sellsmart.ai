@@ -42,9 +42,6 @@ export default function AnalyzePage() {
     const q = query(historyRef, where("email", "==", user?.email));
     const querySnapshot = await getDocs(q);
 
-    console.log(make)
-    console.log(model)
-
     let userCarHistory = [];
     let docId = null;
     let newCarObject = {

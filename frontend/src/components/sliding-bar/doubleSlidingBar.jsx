@@ -1,7 +1,10 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Range } from 'react-range';
+import { formatNumber } from '@/lib/utils';
 
-const DoubleSlider = ({ min = 0, max = 100, step = 1, onChange }) => {
+const DoubleSlider = ({ min = 0, max = 200000, step = 2500, onChange }) => {
   const [values, setValues] = useState([min, max]);
 
   return (
@@ -24,7 +27,8 @@ const DoubleSlider = ({ min = 0, max = 100, step = 1, onChange }) => {
               style={{
                 ...props.style,
                 height: '4px',
-                background: `linear-gradient(to right, #ddd ${((values[0] - min) / (max - min)) * 100}%, #6AA84F ${((values[0] - min) / (max - min)) * 100}%, #6AA84F ${((values[1] - min) / (max - min)) * 100}%, #ddd ${((values[1] - min) / (max - min)) * 100}%)`,
+                background: `linear-gradient(to right, #BDBDBD ${((values[0] - min) / (max - min)) * 100}%, #6AA84F ${((values[0] - min) / (max - min)) * 100}%, #6AA84F ${((values[1] - min) / (max - min)) * 100}%, #BDBDBD ${((values[1] - min) / (max - min)) * 100}%)`,
+                cursor: 'pointer'
               }}
             >
               {children}
@@ -52,8 +56,8 @@ const DoubleSlider = ({ min = 0, max = 100, step = 1, onChange }) => {
           );
         }}
       />
-      <div className="mt-2 text-center">
-        {`$${values[0]} to $${values[1]}`}
+      <div className="mt-2 text-center text-gray-400">
+        {`${formatNumber(values[0])} km to ${formatNumber(values[1])} km`}
       </div>
     </div>
   );

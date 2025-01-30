@@ -7,13 +7,18 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import LoadingSpinner from "../../components/loading-spinner/loadingSpinner"
 import { formatNumber } from '../../lib/utils';
+import { GrCircleQuestion } from "react-icons/gr";
+
+const MAX_KM = 200000
+const MIN_STEP = 2500
+const MAX_STEP = 10000
 
 export default function AnalysisPage() {
   const router = useRouter();
   const [queryParams, setQueryParams] = useState({});
 
-  const [slider1Value, setSlider1Value] = useState(5000);
-  const [slider2Value, setSlider2Value] = useState(2500);
+  const [doubleSliderValues, setDoubleSliderValues] = useState(null);
+  const [singleSliderValue, setSingleSliderValue] = useState(null);
   const [loading, setLoading] = useState(true)
 
   // Token check
@@ -26,6 +31,8 @@ export default function AnalysisPage() {
     params.km = Number(params.km)
     params.year = Number(params.year)
     setQueryParams(params);
+    setDoubleSliderValues([params.km, MAX_KM])
+    setSingleSliderValue(MIN_STEP)
   }, []);
 
   useEffect(() => {
@@ -46,29 +53,49 @@ export default function AnalysisPage() {
               {/* Top half */}
               <div className="text-white pt-8 pr-8 p-4 overflow-y-auto">
                 <LineChart 
-                  maxKm = {slider1Value + queryParams.km} 
-                  curKm = {queryParams.km}
-                  step = {slider2Value} 
+                  maxKm = {doubleSliderValues[1]} 
+                  curKm = {doubleSliderValues[0]}
+                  step = {singleSliderValue} 
                 />
               </div>
               {/* Bottom half */}
               <div className="flex flex-col items-center justify-evenly bg-gray-900 text-white p-4">
-              <DoubleSlider
-                onChange={() => 
-                  console.log("changed value")
-                }
-              />
-                <SlidingBar 
-                  id="2" 
-                  title="Kilometer Increment for Analyzing Value Changes" 
-                  min={2500} 
-                  max={10000} 
-                  step={2500} 
-                  onValueChange={setSlider2Value}
-                  valid={(updatedValue) => {
-                    return updatedValue <= slider1Value
-                  }}
-                />
+                <div className="w-full flex flex-col items-center">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="group relative">
+                      <GrCircleQuestion className="text-gray-400 text-lg cursor-help" />
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity w-64 text-center">
+                        Adjust the range of kilometers to see how your car's value changes over different distances
+                      </div>
+                    </div>
+                    <h3 className="text-gray-400 font-semibold text-lg">Kilometer Range Selection</h3>
+                  </div>
+                  <DoubleSlider
+                    min={queryParams.km}
+                    max={200000}
+                    onChange={(newSliderValues) => {
+                      setDoubleSliderValues(newSliderValues)
+                    }}
+                  />
+                </div>
+                <div className="w-full flex flex-col items-center">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="group relative">
+                      <GrCircleQuestion className="text-gray-400 text-lg cursor-help" />
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity w-64 text-center">
+                        Adjust the interval between data points on the graph for more or less detailed analysis
+                      </div>
+                    </div>
+                    <h3 className="text-gray-400 font-semibold text-lg">Step Size Adjustment</h3>
+                  </div>
+                  <SlidingBar 
+                    min={MIN_STEP}
+                    max={MAX_STEP}
+                    onChange={(newSliderValue) => {
+                      setSingleSliderValue(newSliderValue)
+                    }}
+                  />
+                </div>
               </div>
             </div>
             {/* Right 20% */}

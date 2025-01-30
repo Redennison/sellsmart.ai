@@ -7,8 +7,6 @@ const LineChart = ({ maxKm, curKm, step }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
-  console.log(typeof maxKm)
-
   useEffect(() => {
     if (chartRef.current && !chartInstance.current) {
       const ctx = chartRef.current.getContext('2d');

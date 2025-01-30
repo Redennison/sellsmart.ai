@@ -1,9 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { forwardRef } from "react";
+import { forwardRef, useState, useEffect } from "react";
 import Link from "next/link";
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth } from '@/app/firebase/config'
 
 const CallToAction = forwardRef(
   (props, ref) => {
+
+    const [user] = useAuthState(auth);
+
     return (
       <section
         {...props}
@@ -22,7 +27,7 @@ const CallToAction = forwardRef(
                   perfectly.
                 </p>
                 <div className="mt-10">
-                  <Link href="/sign-up">
+                  <Link href={user ? "/analyze" : "/sign-up"}>
                     <Button size="lg" className="bg-white text-[#6AA84F] hover:bg-gray-300">
                       Start Your Free Analysis
                     </Button>
