@@ -128,7 +128,7 @@ export default function LandingPage() {
                 <button onClick={() => setShowPricingModal(true)} className="hover:text-white">
                   Pricing
                 </button>
-                <Link href="mailto:sellsmart.ai@gmail.com" target="_blank"
+                <Link href="https://mail.google.com/mail/u/0/?fs=1&to=sellsmart.ai@gmail.com&tf=cm" target="_blank"
                   className="hover:text-white">
                   Contact
                 </Link>
