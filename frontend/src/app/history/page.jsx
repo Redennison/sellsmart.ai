@@ -7,10 +7,12 @@ import { auth, db } from '@/app/firebase/config'
 import { useState, useEffect } from 'react'
 import { capitalizeFirstLetter } from '../../lib/utils'
 import LoadingSpinner from "../../components/loading-spinner/loadingSpinner"
+import { useRouter } from 'next/navigation'
 
 export default function HistoryPage() {
   const [user] = useAuthState(auth)
   const [userCarHistory, setUserCarHistory] = useState(null)
+  const router = useRouter()
 
   var historyId = 1
 
@@ -43,6 +45,10 @@ export default function HistoryPage() {
     fetchData()
   }, [user?.email])
 
+  const handleRowClick = (item) => {
+    router.push(`/analysis?make=${item.car_make}&model=${item.car_model}&year=${item.year}&km=${item.km}`)
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black p-4">
       {userCarHistory ?
@@ -64,7 +70,7 @@ export default function HistoryPage() {
                 </thead>
                 <tbody>
                   {userCarHistory && userCarHistory.map((item, index) => (
-                    <tr key={index} className="border-b border-gray-700 hover:bg-gray-800">
+                    <tr key={index} className="border-b border-gray-700 hover:bg-gray-800 cursor-pointer" onClick={() => handleRowClick(item)}>
                       <td className="px-6 py-4">{item.date}</td>
                       <td className="px-6 py-4">{capitalizeFirstLetter(item.car_make)}</td>
                       <td className="px-6 py-4">{capitalizeFirstLetter(item.car_model)}</td>
@@ -82,4 +88,3 @@ export default function HistoryPage() {
     </div>
   )
 }
-
