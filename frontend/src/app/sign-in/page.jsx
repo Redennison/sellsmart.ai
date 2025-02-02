@@ -4,13 +4,38 @@ import { useState } from "react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
+import GoogleButton from 'react-google-button';
+import { 
+  signInWithPopup, 
+  GoogleAuthProvider
+} from "firebase/auth";
 
 const SignInPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
   const router = useRouter();
+  const provider = new GoogleAuthProvider();
+
+  const handleSignInWithGoogle = async () => {
+    try {
+      setGoogleLoading(true);
+      signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user 
+
+        // Store session and redirect
+        sessionStorage.setItem("user", JSON.stringify(user));
+        router.push("/analyze");
+      })
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,6 +66,22 @@ const SignInPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white p-4">
       <div className="w-full max-w-md bg-black/80 text-white border border-gray-700 rounded-lg shadow-lg backdrop-blur-sm p-8">
         <h1 className="text-3xl font-bold text-center text-white mb-6">Sign In</h1>
+
+        <div className="flex justify-center mb-6">
+          <GoogleButton 
+            label={googleLoading ? "Signing in..." : "Sign in with Google"}
+            onClick={handleSignInWithGoogle}
+            type="dark"
+            disabled={googleLoading}
+          />
+        </div>
+
+        <div className="relative flex items-center justify-center mb-6">
+          <div className="border-t border-gray-700 w-full"></div>
+          <span className="bg-black/80 px-2 text-gray-400 text-sm">or</span>
+          <div className="border-t border-gray-700 w-full"></div>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <label

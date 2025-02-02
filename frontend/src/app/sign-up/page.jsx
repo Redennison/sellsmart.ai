@@ -1,42 +1,35 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useCreateUserWithEmailAndPassword, useAuthState } from "react-firebase-hooks/auth";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
 import GoogleButton from 'react-google-button';
 import { 
-  signInWithRedirect, 
-  GoogleAuthProvider, 
-  getRedirectResult, 
-  onAuthStateChanged 
+  signInWithPopup, 
+  GoogleAuthProvider
 } from "firebase/auth";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [user] = useAuthState(auth)
 
   const [createUserWithEmailAndPassword, userError] = useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
   const provider = new GoogleAuthProvider();
 
-  // Listen for auth state changes (to handle redirected user)
-  useEffect(() => {
-      if (user) {
-        console.log("User detected:", user);
+  const handleSignUpWithGoogle = async () => {
+    try {
+      setGoogleLoading(true);
+      signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user 
 
         // Store session and redirect
         sessionStorage.setItem("user", JSON.stringify(user));
         router.push("/analyze");
-      }
-  }, [user]);
-
-  const handleSignUpWithGoogle = async () => {
-    try {
-      setGoogleLoading(true);
-      await signInWithRedirect(auth, provider);
+      })
     } catch (error) {
       console.error("Google sign-up error:", error);
     } finally {
@@ -53,7 +46,6 @@ const SignUpPage = () => {
       if (!res?.user) throw new Error("Sign-up failed. Try again.");
 
       sessionStorage.setItem("user", JSON.stringify(res.user));
-      setFormData({ email: "", password: "" });
       router.push("/analyze");
     } catch (error) {
       console.error("Sign-up error:", error);
