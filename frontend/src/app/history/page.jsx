@@ -35,7 +35,7 @@ export default function HistoryPage() {
       // Check if there's a matching document
       if (!querySnapshot.empty) {
         const document = querySnapshot.docs[0];
-        queryData = document.data().cars || null; // Get existing cars or default to an empty array
+        queryData = document.data().cars || []; // Get existing cars or default to an empty array
         setUserCarHistory(queryData)
       } else {
         setUserCarHistory(null)
@@ -51,7 +51,7 @@ export default function HistoryPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black p-4">
-      {userCarHistory ?
+      {userCarHistory !== null ?
         <Card className="w-full max-w-4xl bg-black/80 text-white border-gray-700 shadow-lg backdrop-blur-sm space-y-6 my-16">
           <CardHeader className="pb-4">
             <CardTitle className="text-3xl font-bold py-3 text-center text-[#6AA84F]">Analysis History</CardTitle>

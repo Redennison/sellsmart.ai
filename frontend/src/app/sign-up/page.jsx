@@ -1,37 +1,34 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
-import GoogleButton from 'react-google-button';
-import { 
-  signInWithPopup, 
-  GoogleAuthProvider
-} from "firebase/auth";
+import GoogleButton from "react-google-button";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { createUserHistory } from "@/lib/utils";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // Error message state
 
-  const [createUserWithEmailAndPassword, userError] = useCreateUserWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
   const provider = new GoogleAuthProvider();
 
   const handleSignUpWithGoogle = async () => {
     try {
       setGoogleLoading(true);
-      signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user 
+      const result = await signInWithPopup(auth, provider);
+      sessionStorage.setItem("user", JSON.stringify(result.user));
 
-        // Store session and redirect
-        sessionStorage.setItem("user", JSON.stringify(user));
-        router.push("/analyze");
-      })
+      await createUserHistory(result.user)
+      router.push("/analyze");
     } catch (error) {
-      console.error("Google sign-up error:", error);
+      setErrorMessage("Google sign-up failed. Please try again.:", error);
+      console.log(error)
     } finally {
       setGoogleLoading(false);
     }
@@ -40,15 +37,18 @@ const SignUpPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMessage(""); // Reset error message
 
     try {
       const res = await createUserWithEmailAndPassword(formData.email, formData.password);
       if (!res?.user) throw new Error("Sign-up failed. Try again.");
 
       sessionStorage.setItem("user", JSON.stringify(res.user));
+
+      await createUserHistory(res?.user)
       router.push("/analyze");
     } catch (error) {
-      console.error("Sign-up error:", error);
+      setErrorMessage(error.message || "Sign-up failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -58,6 +58,10 @@ const SignUpPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white p-4">
       <div className="w-full max-w-md bg-black/80 text-white border border-gray-700 rounded-lg shadow-lg backdrop-blur-sm p-8">
         <h1 className="text-3xl font-bold text-center text-white mb-6">Create an Account</h1>
+
+        {errorMessage && (
+          <div className="text-sm text-red-500 text-center mb-4">{errorMessage}</div>
+        )}
 
         <div className="flex justify-center mb-6">
           <GoogleButton 
@@ -115,12 +119,6 @@ const SignUpPage = () => {
           >
             {loading ? "Signing Up..." : "Sign Up"}
           </button>
-
-          {userError && (
-            <p className="text-sm text-red-500 text-center mt-2">
-              {userError.message}
-            </p>
-          )}
         </form>
 
         <p className="text-sm text-center text-gray-400 mt-4">

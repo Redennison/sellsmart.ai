@@ -1,5 +1,30 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { doc, getDocs, setDoc, collection, query, where } from "firebase/firestore";
+import { db } from "@/app/firebase/config";
+
+export const createUserHistory = async (user) => {
+  if (!user) return; // Exit if no user is provided
+
+  // Write to history
+  const historyRef = collection(db, "history")
+
+  // Create a query against the collection.
+  const q = query(historyRef, where("email", "==", user?.email));
+  const querySnapshot = await getDocs(q);
+
+  // Check if there's a matching document
+  if (querySnapshot.empty) {
+    const docId = doc(historyRef).id; // Generate a new document ID
+
+    // Update the document
+    await setDoc(doc(historyRef, docId), {
+      email: user?.email,
+      cars: []
+    });
+  }
+};
+
 
 export function formatNumber(val) {
   return Number(String(val).replace(/,/g, '')).toLocaleString()

@@ -28,6 +28,8 @@ export default function AnalyzePage() {
       }
     };
 
+    console.log(user)
+
     fetchCarData();
   }, []);
 
@@ -42,9 +44,7 @@ export default function AnalyzePage() {
     const q = query(historyRef, where("email", "==", user?.email));
     const querySnapshot = await getDocs(q);
 
-    let userCarHistory = [];
-    let docId = null;
-    let newCarObject = {
+    const newCarObject = {
       'km': km,
       'car_make': make,
       'car_model': model,
@@ -52,15 +52,9 @@ export default function AnalyzePage() {
       'date': getCurrentFormattedDate()
     }
 
-    // Check if there's a matching document
-    if (!querySnapshot.empty) {
-      const document = querySnapshot.docs[0];
-      userCarHistory = document.data().cars || []; // Get existing cars or default to an empty array
-      docId = document.id; // Get the document ID
-    } else {
-      // If no document exists, create a new one
-      docId = doc(historyRef).id; // Generate a new document ID
-    }
+    const document = querySnapshot.docs[0];
+    const userCarHistory = document.data().cars || []; // Get existing cars or default to an empty array
+    const docId = document.id; // Get the document ID
 
     // Update the document
     await setDoc(doc(historyRef, docId), {
