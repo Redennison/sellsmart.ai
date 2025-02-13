@@ -37,34 +37,42 @@ export default function AnalyzePage() {
     e.preventDefault();
     setLoading(true)
 
-    // Write to history
-    const historyRef = collection(db, "history")
+    try {
 
-    // Create a query against the collection.
-    const q = query(historyRef, where("email", "==", user?.email));
-    const querySnapshot = await getDocs(q);
+      // Write to history
+      const historyRef = collection(db, "history")
 
-    const newCarObject = {
-      'km': km,
-      'car_make': make,
-      'car_model': model,
-      'year': year,
-      'date': getCurrentFormattedDate()
+      // Create a query against the collection.
+      const q = query(historyRef, where("email", "==", user?.email));
+      const querySnapshot = await getDocs(q);
+
+      const newCarObject = {
+        'km': km,
+        'car_make': make,
+        'car_model': model,
+        'year': year,
+        'date': getCurrentFormattedDate()
+      }
+
+      const document = querySnapshot.docs[0];
+      const userCarHistory = document.data().cars || []; // Get existing cars or default to an empty array
+      const docId = document.id; // Get the document ID
+
+      // Update the document
+      await setDoc(doc(historyRef, docId), {
+        email: user?.email,
+        cars: [newCarObject, ...userCarHistory], // Add the new car at the front of the array
+      });
+
+      router.push(`/analysis?make=${make}&model=${model}&year=${year}&km=${km}`)  
+
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
     }
 
-    const document = querySnapshot.docs[0];
-    const userCarHistory = document.data().cars || []; // Get existing cars or default to an empty array
-    const docId = document.id; // Get the document ID
 
-    // Update the document
-    await setDoc(doc(historyRef, docId), {
-      email: user?.email,
-      cars: [newCarObject, ...userCarHistory], // Add the new car at the front of the array
-    });
-
-    setLoading(false)
-
-    router.push(`/analysis?make=${make}&model=${model}&year=${year}&km=${km}`)
   };
 
   return (

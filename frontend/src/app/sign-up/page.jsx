@@ -4,35 +4,15 @@ import { useState } from "react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
-import GoogleButton from "react-google-button";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { createUserHistory } from "@/lib/utils";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); // Error message state
 
   const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
-  const provider = new GoogleAuthProvider();
-
-  const handleSignUpWithGoogle = async () => {
-    try {
-      setGoogleLoading(true);
-      const result = await signInWithPopup(auth, provider);
-      sessionStorage.setItem("user", JSON.stringify(result.user));
-
-      await createUserHistory(result.user)
-      router.push("/analyze");
-    } catch (error) {
-      setErrorMessage("Google sign-up failed. Please try again.:", error);
-      console.log(error)
-    } finally {
-      setGoogleLoading(false);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,21 +42,6 @@ const SignUpPage = () => {
         {errorMessage && (
           <div className="text-sm text-red-500 text-center mb-4">{errorMessage}</div>
         )}
-
-        <div className="flex justify-center mb-6">
-          <GoogleButton 
-            label={googleLoading ? "Signing up..." : "Sign up with Google"}
-            onClick={handleSignUpWithGoogle}
-            type="dark"
-            disabled={googleLoading}
-          />
-        </div>
-
-        <div className="relative flex items-center justify-center mb-6">
-          <div className="border-t border-gray-700 w-full"></div>
-          <span className="bg-black/80 px-2 text-gray-400 text-sm">or</span>
-          <div className="border-t border-gray-700 w-full"></div>
-        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
