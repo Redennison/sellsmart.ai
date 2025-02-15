@@ -65,6 +65,46 @@ async function getCarData() {
   }
 }
 
+// Function that counts exact and similar matches
+export async function countMatches(make, model, km, year) {
+  const allCars = await getCarData();
+
+  console
+
+  let exactMatches = 0;
+  let similarMatches = 0;
+
+  allCars.forEach(row => {
+
+    // Convert everything to strings for comparison and make and model to lowercase
+    const fieldsToCompare = [
+      [row[2], String(year)],   // Year
+      [row[3]?.toLowerCase(), make.toLowerCase()], // Make
+      [row[4]?.toLowerCase(), model.toLowerCase()] // Model
+    ];
+
+    // Count how many fields match
+    const matchedCount = fieldsToCompare.reduce((count, [actual, desired]) => {
+      return count + (actual === desired ? 1 : 0);
+    }, 0);
+
+    if (matchedCount === 3) {
+      // All fields match exactly
+      exactMatches++;
+      similarMatches++;
+    } else if (matchedCount === 2) {
+      // Exactly 2 fields match
+      similarMatches++;
+    }
+  });
+
+  return { exactMatches, similarMatches };
+}
+
+export function confidenceRating(totalMatches) {
+  return totalMatches > 0 ? Math.min(100, parseInt(100 - (100 / (totalMatches + 1)))) : 75;
+}
+
 export async function getCarMakesAndModels() {
   const rows = await getCarData();
 
