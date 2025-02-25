@@ -69,8 +69,6 @@ async function getCarData() {
 export async function countMatches(make, model, km, year) {
   const allCars = await getCarData();
 
-  console
-
   let exactMatches = 0;
   let similarMatches = 0;
 
