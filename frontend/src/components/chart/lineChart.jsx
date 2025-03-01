@@ -3,21 +3,33 @@
 import { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 
-const LineChart = ({ maxKm, curKm, step }) => {
+const LineChart = ({ maxKm, curKm, step, highlightRange = [100000, 150000] }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
   useEffect(() => {
-    if (chartRef.current && !chartInstance.current) {
+    if (chartRef.current) {
       const ctx = chartRef.current.getContext('2d');
 
-      let xAxisValues = []
-      let yAxisValues = []
+      // Generate data points
+      let xAxisValues = [];
+      let yAxisValues = [];
       for (let i = curKm; i <= maxKm; i += step) {
-        xAxisValues.push(i)
-        yAxisValues.push(maxKm - i + Math.floor(Math.random() * 2501))
+        xAxisValues.push(i);
+        yAxisValues.push(maxKm - i + Math.floor(Math.random() * 2501));
       }
 
+      // Determine colors for the dataset
+      const borderColors = xAxisValues.map((km) =>
+        km >= highlightRange[0] && km <= highlightRange[1] ? 'red' : 'rgb(75, 192, 192)'
+      );
+
+      // Destroy the previous chart instance if it exists
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
+
+      // Create new Chart instance
       chartInstance.current = new Chart(ctx, {
         type: 'line',
         data: {
@@ -26,7 +38,15 @@ const LineChart = ({ maxKm, curKm, step }) => {
             {
               label: 'Car Price',
               data: yAxisValues,
-              borderColor: 'rgb(75, 192, 192)',
+              borderColor: borderColors,
+              segment: {
+                borderColor: ctx => {
+                  const index = ctx.p1DataIndex;
+                  return xAxisValues[index] >= highlightRange[0] && xAxisValues[index] <= highlightRange[1]
+                    ? 'red'
+                    : 'rgb(75, 192, 192)';
+                },
+              },
               tension: 0.1,
             },
           ],
@@ -87,7 +107,7 @@ const LineChart = ({ maxKm, curKm, step }) => {
         chartInstance.current = null;
       }
     };
-  }, [maxKm, curKm, step]);
+  }, [maxKm, curKm, step, highlightRange]);
 
   return (
     <div className="w-full h-full">

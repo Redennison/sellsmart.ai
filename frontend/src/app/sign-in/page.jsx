@@ -29,7 +29,7 @@ const SignInPage = () => {
 
       sessionStorage.setItem('user', JSON.stringify(res?.user || null));
       setFormData({ email: "", password: "" });
-      return router.push("/analyze"); // Redirect to home page after successful sign-in
+      router.push("/analyze"); // Redirect to home page after successful sign-in
     } catch (error) {
       console.error("Sign-in error:", error);
     } finally {

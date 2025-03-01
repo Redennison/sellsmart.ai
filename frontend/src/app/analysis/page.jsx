@@ -27,6 +27,23 @@ export default function AnalysisPage() {
       const params = Object.fromEntries(searchParams.entries());
       params.km = Number(params.km);
       params.year = Number(params.year);
+
+      const response = await fetch('http://127.0.0.1:5000/predict', {  // Added trailing slash
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params),
+        mode: 'cors'
+      });
+
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Success:', data);
+
       setQueryParams(params);
       setDoubleSliderValues([params.km, MAX_KM]);
       setNumberSelectValue(2500);

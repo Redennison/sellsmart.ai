@@ -3,9 +3,10 @@ import joblib
 import numpy as np
 from flask import Flask, request, jsonify
 from tensorflow.lite.python.interpreter import Interpreter
+from flask_cors import CORS  # ✅ Enable CORS
 
-# Create a Flask instance
 app = Flask(__name__)
+CORS(app)  # ✅ Allow cross-origin requests
 
 # Column types
 categorical_cols = ['Make', 'Model']
@@ -59,24 +60,37 @@ def get_car_price_prediction(car_make, car_model, year, km):
     prediction_original = scaler_y.inverse_transform(prediction)
     return int(prediction_original[0][0])
 
-# Define a route for the homepage
 @app.route('/predict', methods=['POST'])
 def predict_car_price():
-    data = request.get_json()
-    year = int(data.get('year'))
-    car_make = data.get('make')
-    car_model = data.get('model')
-    start_km = int(data.get('km'))
+    try:
+        data = request.get_json()
+        print("Received JSON:", data)  # Debugging statement to check received data
 
-    prices = []
-    for cur_km in range(start_km, 200000, 2500):
-        price = get_car_price_prediction(car_make, car_model, year, cur_km)
-        prices.append(price)
+        if not data:
+            print("Empty JSON body")
+            return jsonify({"error": "Empty JSON body"}), 400
 
-    return jsonify({
-        "message": "JSON received successfully!",
-        "received_data": prices
-    }), 200
+        year = int(data.get('year', 0))
+        car_make = data.get('make', "")
+        car_model = data.get('model', "")
+        start_km = int(data.get('km', 0))
+
+        print(f"Parsed Data: Make={car_make}, Model={car_model}, Year={year}, KM={start_km}")
+
+        prices = []
+        for cur_km in range(start_km, 200000, 2500):
+            price = get_car_price_prediction(car_make, car_model, year, cur_km)
+            prices.append(price)
+
+        print("Returning response...")
+        return jsonify({
+            "message": "JSON received successfully!",
+            "received_data": prices
+        }), 200
+
+    except Exception as e:
+        print("Error occurred:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 # Start the Flask server
 if __name__ == '__main__':
