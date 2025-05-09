@@ -6,7 +6,7 @@ import DoubleSlider from '../../components/sliding-bar/doubleSlidingBar';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import LoadingSpinner from "../../components/loading-spinner/loadingSpinner"
-import { formatNumber, countMatches, confidenceRating } from '../../lib/utils';
+import { formatNumber, countMatches, confidenceRating, calcIdxOfGreatestValueDrop, filterXAndYAxisValues } from '../../lib/utils';
 import { GrCircleQuestion } from "react-icons/gr";
 
 const MAX_KM = 200000
@@ -17,49 +17,82 @@ export default function AnalysisPage() {
   const router = useRouter();
   const [queryParams, setQueryParams] = useState({});
   const [doubleSliderValues, setDoubleSliderValues] = useState(null);
-  const [numberSelectValue, setNumberSelectValue] = useState(null);
+  const [numberSelectValue, setNumberSelectValue] = useState(MAX_STEP);
   const [matches, setMatches] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [curXAxisValues, setCurXAxisValues] = useState(null);
+  const [curYAxisValues, setCurYAxisValues] = useState(null);
+  const [allXAxisValues, setAllXAxisValues] = useState(null);
+  const [allYAxisValues, setAllYAxisValues] = useState(null);
+  const [idxOfGreatestValueDrop, setIdxOfGreatestValueDrop] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
-      const searchParams = new URLSearchParams(window.location.search);
-      const params = Object.fromEntries(searchParams.entries());
-      params.km = Number(params.km);
-      params.year = Number(params.year);
+      try {
+        const searchParams = new URLSearchParams(window.location.search);
+        const params = Object.fromEntries(searchParams.entries());
+        params.km = Number(params.km);
+        params.year = Number(params.year);
 
-      const response = await fetch('http://127.0.0.1:5000/predict', {  // Added trailing slash
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(params),
-        mode: 'cors'
-      });
+        const response = await fetch('http://127.0.0.1:5000/predict', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(params),
+          mode: 'cors'
+        });
 
-      if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        let xAxisValues = [];
+        let yAxisValues = [];
+        data.received_data.forEach(([km, price]) => {
+          xAxisValues.push(km)
+          yAxisValues.push(price)
+        })
+        setAllXAxisValues(xAxisValues)
+        setAllYAxisValues(yAxisValues)
+
+        const [filteredXAxisValues, filteredYAxisValues] = filterXAndYAxisValues(xAxisValues, yAxisValues, MAX_STEP, params.km, MAX_KM)
+
+        setCurXAxisValues(filteredXAxisValues)
+        setCurYAxisValues(filteredYAxisValues)
+        setIdxOfGreatestValueDrop(calcIdxOfGreatestValueDrop(yAxisValues))
+
+        setQueryParams(params);
+        setDoubleSliderValues([params.km, MAX_KM]);
+
+        const fetchedMatches = await countMatches(params.make, params.model, params.km, params.year);
+        setMatches(fetchedMatches);
+      } finally {
+        setLoading(false)
       }
-
-      const data = await response.json();
-      console.log('Success:', data);
-
-      setQueryParams(params);
-      setDoubleSliderValues([params.km, MAX_KM]);
-      setNumberSelectValue(2500);
-
-      const fetchedMatches = await countMatches(params.make, params.model, params.km, params.year);
-      setMatches(fetchedMatches);
     };
     setLoading(true);
     fetchData();
   }, []);
 
   useEffect(() => {
-    if (queryParams && matches) {
-      setLoading(false);
+    if (!doubleSliderValues || !numberSelectValue) {
+      return
     }
-  }, [queryParams, matches]);
+
+    const [filteredXAxisValues, filteredYAxisValues] = filterXAndYAxisValues(allXAxisValues, allYAxisValues, numberSelectValue, doubleSliderValues[0], doubleSliderValues[1])
+
+    setCurXAxisValues(filteredXAxisValues)
+    setCurYAxisValues(filteredYAxisValues)
+    setIdxOfGreatestValueDrop(calcIdxOfGreatestValueDrop(filteredYAxisValues))
+  }, [doubleSliderValues, numberSelectValue])
+
+  // useEffect(() => {
+  //   if (queryParams && matches && curXAxisValues && curYAxisValues && idxOfGreatestValueDrop) {
+  //     setLoading(false);
+  //   }
+  // }, [queryParams, matches, curXAxisValues, curYAxisValues, idxOfGreatestValueDrop]);
 
   return (
     <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black">
@@ -70,9 +103,12 @@ export default function AnalysisPage() {
             {/* Top half (Chart) */}
             <div className="text-white py-8 px-4 overflow-y-auto">
               <LineChart
-                maxKm={doubleSliderValues?.[1]}
-                curKm={doubleSliderValues?.[0]}
+                maxKm={doubleSliderValues[1]}
+                curKm={doubleSliderValues[0]}
                 step={numberSelectValue}
+                xAxisValues={curXAxisValues}
+                yAxisValues={curYAxisValues}
+                idxOfGreatestValueDrop={idxOfGreatestValueDrop}
               />
             </div>
 
@@ -122,8 +158,8 @@ export default function AnalysisPage() {
                     <h3 className="text-gray-400 font-semibold text-lg">Step Size Adjustment</h3>
                   </div>
                   <NumberSelect
-                    min={2500}
-                    max={10000}
+                    min={MIN_STEP}
+                    max={MAX_STEP}
                     step={2500}
                     onChange={(newNumberSelectValue) => {
                       setNumberSelectValue(newNumberSelectValue);
@@ -152,7 +188,7 @@ export default function AnalysisPage() {
               </h2>
               <p className="text-gray-400 leading-6">
                 Assuming you want to drive your current vehicle for as long as possible, we recommend selling at
-                <span className="text-[#6AA84F] font-bold"> {formatNumber(queryParams.km)} km</span>.
+                <span className="text-[#6AA84F] font-bold"> {formatNumber(curXAxisValues[idxOfGreatestValueDrop])} km</span>.
               </p>
             </div>
             <div>

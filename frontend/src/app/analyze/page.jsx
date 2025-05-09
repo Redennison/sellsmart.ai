@@ -71,8 +71,6 @@ export default function AnalyzePage() {
     } finally {
       setLoading(false)
     }
-
-
   };
 
   return (

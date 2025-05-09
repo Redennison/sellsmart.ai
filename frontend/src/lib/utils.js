@@ -27,6 +27,7 @@ export const createUserHistory = async (user) => {
 
 
 export function formatNumber(val) {
+  console.log(val)
   return Number(String(val).replace(/,/g, '')).toLocaleString()
 }
 
@@ -44,6 +45,40 @@ export function capitalizeFirstLetter(val) {
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
+}
+
+export function filterXAndYAxisValues(allXAxisValues, allYAxisValues, stepSize, minKm, maxKm, minStepSize=2500) {
+  let stepXAxisValues = []
+  let stepYAxisValues = []
+  // Update current values to proper step size
+  let inc = Math.floor(stepSize / minStepSize)
+
+  for (let i=0; i<allXAxisValues.length; i+=inc) {
+    stepXAxisValues.push(allXAxisValues[i])
+    stepYAxisValues.push(allYAxisValues[i])
+  }
+
+  let filteredXAxisValues = []
+  let filteredYAxisValues = []
+  stepXAxisValues.forEach((km, idx) => {
+    if (km >= minKm && km <= maxKm) {
+      filteredXAxisValues.push(km)
+      filteredYAxisValues.push(stepYAxisValues[idx])
+    }
+  })
+
+  return [filteredXAxisValues, filteredYAxisValues]
+}
+
+export function calcIdxOfGreatestValueDrop(yAxisValues) {
+  let idxOfGreatestValueDrop = 0
+  let greatestValueDrop = 0
+  for (let i=1; i<yAxisValues.length - 1; i++) {
+    let curValueDrop = yAxisValues[i] - yAxisValues[i-1]
+    idxOfGreatestValueDrop = curValueDrop < greatestValueDrop ? i-1 : idxOfGreatestValueDrop
+    greatestValueDrop = idxOfGreatestValueDrop === i-1 ? curValueDrop : greatestValueDrop
+  }
+  return idxOfGreatestValueDrop
 }
 
 // Most updated cars.csv file must be placed in ml/dataset

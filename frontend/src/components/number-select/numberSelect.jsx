@@ -36,7 +36,7 @@ const NumberSelect = ({ min, max, step, onChange }) => {
   return (
     <Select
       options={options}
-      defaultValue={options[0]}    // <-- Select the min value by default
+      defaultValue={options[options.length - 1]}
       onChange={(selected) => {
         if (onChange) {
           onChange(selected.value)

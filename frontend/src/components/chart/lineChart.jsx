@@ -2,8 +2,9 @@
 
 import { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
+import { formatNumber } from '@/lib/utils';
 
-const LineChart = ({ maxKm, curKm, step, highlightRange = [100000, 150000] }) => {
+const LineChart = ({ xAxisValues, yAxisValues, idxOfGreatestValueDrop }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -11,17 +12,9 @@ const LineChart = ({ maxKm, curKm, step, highlightRange = [100000, 150000] }) =>
     if (chartRef.current) {
       const ctx = chartRef.current.getContext('2d');
 
-      // Generate data points
-      let xAxisValues = [];
-      let yAxisValues = [];
-      for (let i = curKm; i <= maxKm; i += step) {
-        xAxisValues.push(i);
-        yAxisValues.push(maxKm - i + Math.floor(Math.random() * 2501));
-      }
-
       // Determine colors for the dataset
       const borderColors = xAxisValues.map((km) =>
-        km >= highlightRange[0] && km <= highlightRange[1] ? 'red' : 'rgb(75, 192, 192)'
+        km >= xAxisValues[idxOfGreatestValueDrop] && km <= xAxisValues[idxOfGreatestValueDrop + 1] ? 'red' : 'rgb(75, 192, 192)'
       );
 
       // Destroy the previous chart instance if it exists
@@ -42,7 +35,7 @@ const LineChart = ({ maxKm, curKm, step, highlightRange = [100000, 150000] }) =>
               segment: {
                 borderColor: ctx => {
                   const index = ctx.p1DataIndex;
-                  return xAxisValues[index] >= highlightRange[0] && xAxisValues[index] <= highlightRange[1]
+                  return xAxisValues[index] > xAxisValues[idxOfGreatestValueDrop] && xAxisValues[index] <= xAxisValues[idxOfGreatestValueDrop + 1]
                     ? 'red'
                     : 'rgb(75, 192, 192)';
                 },
@@ -90,7 +83,7 @@ const LineChart = ({ maxKm, curKm, step, highlightRange = [100000, 150000] }) =>
               },
               ticks: {
                 callback: function (value) {
-                  return `$${value}`;
+                  return `$${formatNumber(value)}`;
                 },
               },
               min: 0,
@@ -107,7 +100,7 @@ const LineChart = ({ maxKm, curKm, step, highlightRange = [100000, 150000] }) =>
         chartInstance.current = null;
       }
     };
-  }, [maxKm, curKm, step, highlightRange]);
+  }, [xAxisValues, yAxisValues, idxOfGreatestValueDrop]);
 
   return (
     <div className="w-full h-full">
