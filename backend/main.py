@@ -4,6 +4,7 @@ import numpy as np
 import threading
 from flask import Flask, request, jsonify
 from tensorflow.lite.python.interpreter import Interpreter
+import random
 
 app = Flask(__name__)
 
@@ -34,6 +35,33 @@ loaded_columns = pd.read_csv('./model/input_layer_columns.csv', header=None).squ
 # Lock to prevent multiple threads accessing the interpreter at the same time
 interpreter_lock = threading.Lock()
 
+def generate_sample_predictions(start_km, end_km=200000, increment=2500, start_price=42500, min_price=10000):
+    prices = []
+    current_km = start_km
+    current_price = start_price
+
+    while current_km <= end_km:
+        prices.append((current_km, int(current_price)))
+
+        # Add controlled randomness to depreciation amount
+        # As km increases, depreciation slows down (but still always decreasing)
+        if current_km < 60000:
+            depreciation = random.uniform(650, 850)
+        elif current_km < 120000:
+            depreciation = random.uniform(350, 550)
+        else:
+            depreciation = random.uniform(200, 400)
+
+        current_price -= depreciation
+
+        # Ensure price doesn't fall below minimum
+        if current_price < min_price:
+            current_price = min_price
+
+        current_km += increment
+
+    return prices
+
 def get_car_price_prediction(car_make, car_model, year, km):
     input_df = pd.DataFrame({'Year': [year], 'Make': [car_make], 'Model': [car_model], 'Kilometres': [km]})
 
@@ -59,16 +87,16 @@ def get_car_price_prediction(car_make, car_model, year, km):
     # Make prediction
     input_data = np.array(scaled_df.to_numpy(), dtype=np.float32)
 
-    with interpreter_lock:  # ✅ Prevent multiple threads from accessing the interpreter
+    with interpreter_lock:  # Prevent multiple threads from accessing the interpreter
         interpreter.set_tensor(input_details[0]['index'], input_data)
         interpreter.invoke()
-        output_tensor = interpreter.get_tensor(output_details[0]['index'])  # ✅ Safely fetch output
-        prediction = np.copy(output_tensor)  # ✅ Copy the tensor to avoid internal memory reference issues
+        output_tensor = interpreter.get_tensor(output_details[0]['index'])  # Safely fetch output
+        prediction = np.copy(output_tensor)  # Copy the tensor to avoid internal memory reference issues
 
     prediction_original = scaler_y.inverse_transform(prediction)
     return int(prediction_original[0][0])
 
-# ✅ Function to add CORS headers to responses
+# Function to add CORS headers to responses
 def _build_cors_response(response, status=200):
     response = make_response(response, status)
     response.headers["Access-Control-Allow-Origin"] = "*"  # ✅ Allow ALL origins
@@ -79,11 +107,11 @@ def _build_cors_response(response, status=200):
 @app.route('/predict', methods=['POST', 'OPTIONS'])  # ✅ Handle preflight
 def predict_car_price():
     try:
-        # ✅ Handle preflight request
+        # Handle preflight request
         if request.method == "OPTIONS":
             return _build_cors_response("", 200)
 
-        # ✅ Process JSON request
+        # Process JSON request
         data = request.get_json()
         print("Received JSON:", data)
 
@@ -95,90 +123,16 @@ def predict_car_price():
         car_model = data.get('model', "")
         start_km = int(data.get('km', 0))
 
-        print(f"Parsed Data: Make={car_make}, Model={car_model}, Year={year}, KM={start_km}")
-
-        # ✅ Generate predictions
-        prices = [
-            (20000, 42500),
-            (22500, 41792),
-            (25000, 41083),
-            (27500, 40375),
-            (30000, 39667),
-            (32500, 38958),
-            (35000, 38250),
-            (37500, 37542),
-            (40000, 36833),
-            (42500, 36125),
-            (45000, 35417),
-            (47500, 34708),
-            (50000, 34000),
-            (52500, 33400),
-            (55000, 32800),
-            (57500, 32200),
-            (60000, 30500),
-            (62500, 30500),
-            (65000, 30500),
-            (67500, 29800),
-            (70000, 29200),
-            (72500, 28600),
-            (75000, 28000),
-            (77500, 27400),
-            (80000, 26800),
-            (82500, 26200),
-            (85000, 25600),
-            (87500, 25000),
-            (90000, 24400),
-            (92500, 23800),
-            (95000, 23200),
-            (97500, 22600),
-            (100000, 22000),
-            (102500, 21400),
-            (105000, 20800),
-            (107500, 20200),
-            (110000, 17300),
-            (112500, 17300),
-            (115000, 17300),
-            (117500, 17300),
-            (120000, 17200),
-            (122500, 17150),
-            (125000, 17100),
-            (127500, 17000),
-            (130000, 16900),
-            (132500, 16700),
-            (135000, 16600),
-            (137500, 16300),
-            (140000, 16200),
-            (142500, 16000),
-            (145000, 15800),
-            (147500, 15400),
-            (150000, 15000),  # Benchmark
-            (152500, 14800),
-            (155000, 14600),
-            (157500, 14400),
-            (160000, 14200),
-            (162500, 14000),
-            (165000, 13500),
-            (167500, 13250),
-            (170000, 13000),
-            (172500, 12750),
-            (175000, 12500),
-            (177500, 12250),
-            (180000, 12000),
-            (182500, 11750),
-            (185000, 11500),
-            (187500, 11250),
-            (190000, 11000),
-            (192500, 10750),
-            (195000, 10500),
-            (197500, 10250),
-            (200000, 10000)
-        ]
+        # Uncomment this to generate predictions for all km values
 
         # for cur_km in range(start_km, 200001, 2500):
         #     price = get_car_price_prediction(car_make, car_model, year, cur_km)
         #     prices.append((cur_km, price))
 
-        # ✅ Return response with CORS headers
+        # Sample predictions
+        prices = generate_sample_predictions(start_km)
+
+        # Return response with CORS headers
         return _build_cors_response(jsonify({
             "message": "JSON received successfully!",
             "received_data": prices
