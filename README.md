@@ -9,7 +9,7 @@
 SellSmart.ai combines:
 
 - A modern frontend built with **Next.js**
-- A Flask-powered **backend API**
+- A FastAPI-powered **backend API**
 - A deep learning **Artificial Neural Network (ANN)** to predict vehicle prices
 - Analytical tools to visualize depreciation trends over mileage and time
 
@@ -40,7 +40,7 @@ The backend features a deep learning model trained on cleaned and structured car
 ## 🛠️ Tech Stack
 
 - **Frontend:** Next.js  
-- **Backend:** Flask  
+- **Backend:** FastAPI  
 - **ML & Tools:**  
   - TensorFlow / Keras  
   - scikit-learn  
